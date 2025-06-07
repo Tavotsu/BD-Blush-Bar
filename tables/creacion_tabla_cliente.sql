@@ -1,6 +1,6 @@
 CREATE TABLE cliente(  
     numrun int NOT NULL PRIMARY KEY,
-    dv_run INT NOT NULL, 
+    dv_run VARCHAR(1) NOT NULL, 
     pnombre VARCHAR(25) NOT NULL,
     snombre VARCHAR(25) NOT NULL,
     papellido VARCHAR(35) NOT NULL,
