@@ -8,6 +8,8 @@ CREATE TABLE cliente(
     edad INT(3) NOT NULL,
     id_genero INT NOT NULL,
     id_comuna INT NOT NULL,
+    id_tipo_cliente INT NOT NULL,
     FOREIGN KEY (id_genero) REFERENCES genero(id_genero),
-    FOREIGN KEY (id_comuna) REFERENCES comuna(id_comuna)
+    FOREIGN KEY (id_comuna) REFERENCES comuna(id_comuna),
+    FOREIGN KEY (id_tipo_cliente) REFERENCES tipo_cliente(id_tipo_cliente)
 );
