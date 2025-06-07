@@ -1,0 +1,4 @@
+CREATE TABLE marca(
+    id_marca int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    descripcion VARCHAR(100) NOT NULL
+);
