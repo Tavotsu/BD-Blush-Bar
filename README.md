@@ -50,3 +50,7 @@ Para montar la base de datos en un motor MySQL:
    ```sql
    CREATE DATABASE blush_bar;
    USE blush_bar;
+
+## 🖼️ Diagrama Entidad-Relacion
+
+![Relational_1](https://github.com/user-attachments/assets/d26ffaf2-80b1-43c9-9cb9-817d866c6583)
