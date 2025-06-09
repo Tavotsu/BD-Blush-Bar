@@ -85,17 +85,17 @@ CREATE TABLE venta_promocion(
     FOREIGN KEY (id_promocion) REFERENCES promocion(id_promocion)
 );
 
---Comienza el poblado de la base de datos
+#Comienza el poblado de la base de datos
 
 START TRANSACTION;
 
--- Insertar géneros
+# Insertar géneros
 INSERT INTO genero (descripcion) VALUES 
 ('Femenino'),
 ('Masculino'),
 ('Otro');
 
--- Insertar comunas
+# Insertar comunas
 INSERT INTO comuna (descripcion) VALUES 
 ('LA PALOMA'),
 ('MIRASOL'),
@@ -111,21 +111,21 @@ INSERT INTO comuna (descripcion) VALUES
 ('LAGUNITAS'),
 ('PICHI PELLUCO');
 
--- Insertar tipos de cliente y sus descuentos
+# Insertar tipos de cliente y sus descuentos
 INSERT INTO tipo_cliente (descripcion, porc_desc) VALUES 
 ('Regular', 0.00),
 ('Silver', 5.00),
 ('Gold', 10.00),
 ('Platinum', 15.00);
 
--- Insertar categorías de productos
+# Insertar categorías de productos
 INSERT INTO categoria (descripcion) VALUES 
 ('Maquillaje'),
 ('Skincare'),
 ('Perfumería'),
 ('Accesorios');
 
--- Insertar marcas
+# Insertar marcas
 INSERT INTO marca (descripcion) VALUES 
 ('MAC'),
 ('Maybelline'),
@@ -138,7 +138,7 @@ INSERT INTO marca (descripcion) VALUES
 ('Dior'),
 ('Urban Decay');
 
--- Insertar productos
+# Insertar productos
 INSERT INTO producto (id_producto, nombre, descripcion, precio, stock, id_categoria, id_marca) VALUES 
 (1, 'Labial MAC Ruby Woo', 'Labial mate rojo icónico', 18990, 50, 1, 1),
 (2, 'Base Fit Me', 'Base de maquillaje para todo tipo de piel', 12990, 60, 1, 2),
@@ -151,21 +151,21 @@ INSERT INTO producto (id_producto, nombre, descripcion, precio, stock, id_catego
 (9, 'Paleta Sombras', 'Paleta de 12 sombras nude', 35990, 40, 1, 10),
 (10, 'Corrector Age Rewind', 'Corrector antiojeras', 11990, 55, 1, 2);
 
--- Insertar métodos de pago
+# Insertar métodos de pago
 INSERT INTO metodo_pago (descripcion) VALUES 
 ('Efectivo'),
 ('Débito'),
 ('Crédito'),
 ('Mercado pago');
 
--- Insertar promociones
+# Insertar promociones
 INSERT INTO promocion (nombre, porc_desc, fecha_inicio, fecha_fin, activa) VALUES 
 ('Descuento Primavera', 15.00, '2023-09-21', '2023-12-21', true),
 ('2x1 Maquillaje', 50.00, '2023-10-01', '2023-10-31', true),
 ('Regalo Sorpresa', 10.00, '2023-11-01', '2023-12-31', true),
 ('Cliente Frecuente', 20.00, '2023-01-01', '2023-12-31', true);
 
--- Insertar clientes 
+# Insertar clientes 
 INSERT INTO cliente (numrun, dv_run, pnombre, snombre, papellido, mapellido, edad, id_genero, id_comuna, id_tipo_cliente) VALUES 
 (16311545, 'K', 'Camila', '', 'Flores', 'Martínez', 43, 1, 5, 1),
 (16932260, '0', 'José', 'Francisco', 'Fuentes', 'Rodríguez', 54, 2, 5, 3),
@@ -668,7 +668,7 @@ INSERT INTO cliente (numrun, dv_run, pnombre, snombre, papellido, mapellido, eda
 (15944198, '9', 'Alberto', 'Gabriel', 'Fuentes', 'Morales', 52, 2, 1, 2),
 (24341543, '8', 'Fernanda', 'Carolina', 'Castillo', 'Valenzuela', 24, 1, 11, 4);
 
--- Insertar ventas
+# Insertar ventas
 INSERT INTO venta (numrun, id_metodo_pago, fecha_venta, monto_subtotal, monto_descuentos, monto_final) VALUES 
 (19854237, 1, '2023-08-21 21:52:43', 265870.00, 0.00, 265870.00),
 (18524282, 4, '2024-11-08 21:52:43', 113940.00, 11394.00, 102546.00),
@@ -1021,7 +1021,7 @@ INSERT INTO venta (numrun, id_metodo_pago, fecha_venta, monto_subtotal, monto_de
 (17906679, 2, '2023-12-24 21:52:43', 287970.00, 0.00, 287970.00),
 (18312266, 3, '2024-01-27 21:52:43', 381900.00, 76380.00, 305520.00);
 
--- Insertar detalles de venta
+# Insertar detalles de venta
 INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES 
 (1, 9, 2, 35990.00),
 (1, 1, 3, 18990.00),
@@ -2080,7 +2080,7 @@ INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VAL
 (350, 2, 2, 12990.00),
 (350, 10, 3, 11990.00);
 
--- Insertar relaciones venta-promoción
+# Insertar relaciones venta-promoción
 INSERT INTO venta_promocion (id_venta, id_promocion) VALUES 
 (4, 4),
 (5, 2),
