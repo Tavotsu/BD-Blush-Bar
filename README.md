@@ -18,7 +18,7 @@ La base de datos está diseñada con enfoque relacional y contiene las siguiente
 
 ### 🔹 Tablas Principales
 
-- **`cliente`**: Contiene información personal de los clientes, incluyendo RUN, nombre, edad y relaciones con otras tablas como `genero`, `comuna` y `tipo_cliente`.
+- **`cliente`**: Contiene información personal de los clientes, incluyendo RUN, nombre, fecha de nacimiento y relaciones con otras tablas como `genero`, `comuna` y `tipo_cliente`.
 - **`producto`**: Información detallada de los productos disponibles, como nombre, precio, stock, marca y categoría.
 - **`venta`**: Registro de ventas realizadas, incluyendo cliente, método de pago, montos y fecha.
 - **`detalle_venta`**: Detalle de cada producto vendido en una venta específica.
