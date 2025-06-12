@@ -41,9 +41,9 @@ RUT_MAX = 25000000
 
 # --- DATOS ESTÁTICOS DE LA BD ---
 generos = [(1, 'Femenino'), (2, 'Masculino'), (3, 'Otro')]
-comunas = [(1, 'Puerto Montt'), (2, 'Puerto Varas'), (3, 'Osorno'), (4, 'Frutillar'), (5, 'Llanquihue'), (6, 'Calbuco')]
+comunas = [(1, 'La paloma'), (2, 'Mirasol'), (3, 'Puerta sur'), (4, 'Jardin Austral'), (5, 'Barrio Puerto (Angelmo)'), (6, 'Parque Industrial'), (7, 'Chile Barrio'), (8, 'Antuhue'), (9, 'Alerce'), (6, 'Lagunitas'), (6, 'Pichi pelluco')]
 tipos_cliente = [(1, 'Regular', 0.00), (2, 'Frecuente', 7.50), (3, 'Suscrito', 5.00)]
-metodos_pago = [(1, 'Tarjeta'), (2, 'Efectivo'), (3, 'App')]
+metodos_pago = [(1, 'Debito/Prepago'), (2, 'Credito'), (3, 'Efectivo'),(4, 'App')]
 categorias = [(1, 'Maquillaje'), (2, 'Cuidado de la piel'), (3, 'Accesorios'), (4, 'Kits y Sets'), (5, 'Maquillaje Ojos'), (6, 'Maquillaje Labios')]
 promociones = [
     (1, 'Cyber Day 2024', 20.00, '2024-10-21', '2024-10-23'),
@@ -52,8 +52,6 @@ promociones = [
     (4, 'Especial Día de la Madre 2025', 10.00, '2025-05-01', '2025-05-11'),
     (5, 'Liquidación de Invierno 2025', 30.00, '2025-07-20', '2025-07-31')
 ]
-
-# Plantillas de productos para dar realismo
 plantillas_productos = {
     'The Ordinary': [("Sérum Niacinamida 10%", 2, 8990), ("Ácido Hialurónico 2% + B5", 2, 9990), ("Peeling Solution AHA 30%", 2, 10990)],
     'NARS': [("Corrector Radiante Cremoso", 1, 28990), ("Rubor 'Orgasm'", 1, 31990), ("Base Light Reflecting", 1, 45990)],
@@ -86,23 +84,31 @@ def calcular_dv(rut_sin_dv):
             multiplicador = 2
     resto = suma % 11
     dv = 11 - resto
-    if dv == 11:
-        return '0'
-    elif dv == 10:
-        return 'K'
-    else:
-        return str(dv)
+    if dv == 11: return '0'
+    elif dv == 10: return 'K'
+    else: return str(dv)
 
 def generar_sql():
     ruts_usados = set()
     
     with open('poblar_BD.sql', 'w', encoding='utf-8') as f:
         print("Iniciando la generación del archivo poblar_BD.sql...")
-        f.write("-- Script de Poblado para Base de Datos Blush Bar\n")
-        f.write("-- Generado automáticamente por script de Python\n\n")
-        f.write("SET FOREIGN_KEY_CHECKS=0;\nTRUNCATE TABLE venta_promocion;\nTRUNCATE TABLE detalle_venta;\nTRUNCATE TABLE venta;\nTRUNCATE TABLE cliente;\nTRUNCATE TABLE producto;\nTRUNCATE TABLE marca;\nTRUNCATE TABLE categoria;\nTRUNCATE TABLE metodo_pago;\nTRUNCATE TABLE tipo_cliente;\nTRUNCATE TABLE comuna;\nTRUNCATE TABLE genero;\nTRUNCATE TABLE promocion;\nSET FOREIGN_KEY_CHECKS=1;\n\nSTART TRANSACTION;\n\n")
+        f.write("-- Script de Poblado para Base de Datos Blush Bar\n\n")
+        f.write("SET FOREIGN_KEY_CHECKS=0;\nTRUNCATE TABLE satisfaccion_venta;\nTRUNCATE TABLE venta_promocion;\nTRUNCATE TABLE detalle_venta;\nTRUNCATE TABLE venta;\nTRUNCATE TABLE cliente;\nTRUNCATE TABLE producto;\nTRUNCATE TABLE marca;\nTRUNCATE TABLE categoria;\nTRUNCATE TABLE metodo_pago;\nTRUNCATE TABLE tipo_cliente;\nTRUNCATE TABLE comuna;\nTRUNCATE TABLE genero;\nTRUNCATE TABLE promocion;\nSET FOREIGN_KEY_CHECKS=1;\n\nSTART TRANSACTION;\n\n")
 
-        # --- Tablas de catálogo estáticas ---
+        # --- Creación de tabla satisfaccion_venta ---
+        f.write("-- Creación de la nueva tabla satisfaccion_venta\n")
+        f.write("CREATE TABLE IF NOT EXISTS satisfaccion_venta(\n")
+        f.write("    id_satisfaccion INT NOT NULL PRIMARY KEY AUTO_INCREMENT,\n")
+        f.write("    id_venta INT NOT NULL UNIQUE,\n")
+        f.write("    puntuacion INT NOT NULL,\n")
+        f.write("    comentario TEXT,\n")
+        f.write("    fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n")
+        f.write("    FOREIGN KEY (id_venta) REFERENCES venta(id_venta),\n")
+        f.write("    CONSTRAINT chk_puntuacion CHECK (puntuacion BETWEEN 1 AND 10)\n")
+        f.write(");\n\n")
+
+        # --- Poblado de tablas ---
         f.write("-- genero\n")
         for g in generos: f.write(f"INSERT INTO `genero` (`id_genero`, `descripcion`) VALUES ({g[0]}, '{g[1]}');\n")
         
@@ -119,34 +125,33 @@ def generar_sql():
         for cat in categorias: f.write(f"INSERT INTO `categoria` (`id_categoria`, `descripcion`) VALUES ({cat[0]}, '{cat[1]}');\n")
 
         f.write("\n-- marca\n")
-        marcas_map = {}
-        for i, marca_nombre in enumerate(MARCAS_BLUSH_BAR, 1):
-            f.write(f"INSERT INTO `marca` (`id_marca`, `descripcion`) VALUES ({i}, '{marca_nombre}');\n")
-            marcas_map[marca_nombre] = i
+        marcas_map = {marca_nombre: i for i, marca_nombre in enumerate(MARCAS_BLUSH_BAR, 1)}
+        for marca_nombre, i in marcas_map.items():
+             f.write(f"INSERT INTO `marca` (`id_marca`, `descripcion`) VALUES ({i}, '{marca_nombre}');\n")
         
         f.write("\n-- promocion\n")
         for p in promociones: f.write(f"INSERT INTO `promocion` (`id_promocion`, `nombre`, `porc_desc`, `fecha_inicio`, `fecha_fin`, `activa`) VALUES ({p[0]}, '{p[1]}', {p[2]}, '{p[3]}', '{p[4]}', TRUE);\n")
         
-        # --- Generación de Productos ---
         print(f"Generando {NUM_PRODUCTOS} productos...")
         f.write("\n-- producto\n")
         productos_generados = []
         for i in range(NUM_PRODUCTOS):
-            id_producto = 101 + i
             marca_nombre = random.choice(list(plantillas_productos.keys()))
-            id_marca = marcas_map[marca_nombre]
             plantilla = random.choice(plantillas_productos[marca_nombre])
-            nombre_producto = f"{plantilla[0]} {marca_nombre}"
+            nombre = f"{plantilla[0]} {marca_nombre}".replace("'", "''")
             id_categoria = plantilla[1]
             precio = plantilla[2] + random.randint(-2000, 2000)
-            stock = random.randint(20, 200)
-            
-            producto = {'id_producto': id_producto, 'nombre': nombre_producto.replace("'", "''"), 'precio': precio}
-            productos_generados.append(producto)
-            
-            f.write(f"INSERT INTO `producto` (`id_producto`, `nombre`, `descripcion`, `precio`, `stock`, `id_categoria`, `id_marca`) VALUES ({id_producto}, '{producto['nombre']}', 'Descripción de {producto['nombre']}', {precio}, {stock}, {id_categoria}, {id_marca});\n")
+            id_marca = marcas_map[marca_nombre]
+            productos_generados.append({
+                'id_producto': i + 101,
+                'nombre': nombre,
+                'precio': precio,
+                'id_categoria': id_categoria,
+                'id_marca': id_marca
+            })
+        for p in productos_generados:
+            f.write(f"INSERT INTO `producto` (`id_producto`, `nombre`, `descripcion`, `precio`, `stock`, `id_categoria`, `id_marca`) VALUES ({p['id_producto']}, '{p['nombre']}', 'Descripción de {p['nombre']}', {p['precio']}, {random.randint(20, 200)}, {p['id_categoria']}, {p['id_marca']});\n")
 
-        # --- Generación de Clientes ---
         print(f"Generando {NUM_CLIENTES} clientes...")
         f.write("\n-- cliente\n")
         clientes_generados = []
@@ -154,44 +159,37 @@ def generar_sql():
             while True:
                 numrun = random.randint(RUT_MIN, RUT_MAX)
                 if numrun not in ruts_usados:
-                    ruts_usados.add(numrun)
-                    break
+                    ruts_usados.add(numrun); break
             
             dv_run = calcular_dv(numrun)
-            
-            if random.random() < 0.75:
-                id_genero, pnombre, snombre = 1, random.choice(NOMBRES_FEMENINOS), random.choice(NOMBRES_FEMENINOS)
-            else:
-                id_genero, pnombre, snombre = 2, random.choice(NOMBRES_MASCULINOS), random.choice(NOMBRES_MASCULINOS)
-            
+            if random.random() < 0.75: id_genero, pnombre, snombre = 1, random.choice(NOMBRES_FEMENINOS), random.choice(NOMBRES_FEMENINOS)
+            else: id_genero, pnombre, snombre = 2, random.choice(NOMBRES_MASCULINOS), random.choice(NOMBRES_MASCULINOS)
             papellido, mapellido = random.choice(APELLIDOS), random.choice(APELLIDOS)
-            hoy = datetime.now()
-            fec_nac = hoy - timedelta(days=random.randint(18*365, 65*365))
+            fec_nac = datetime.now() - timedelta(days=random.randint(18*365, 65*365))
             id_comuna, id_tipo_cliente = random.choice(comunas)[0], random.choice(tipos_cliente)[0]
             
             clientes_generados.append({'numrun': numrun, 'id_tipo_cliente': id_tipo_cliente})
             f.write(f"INSERT INTO `cliente` (`numrun`, `dv_run`, `pnombre`, `snombre`, `papellido`, `mapellido`, `fec_nac`, `id_genero`, `id_comuna`, `id_tipo_cliente`) VALUES ({numrun}, '{dv_run}', '{pnombre}', '{snombre}', '{papellido}', '{mapellido}', '{fec_nac.strftime('%Y-%m-%d')}', {id_genero}, {id_comuna}, {id_tipo_cliente});\n")
 
-        # --- Generación de Ventas ---
-        print(f"Generando {NUM_VENTAS} ventas...")
-        f.write("\n-- venta\n-- detalle_venta\n-- venta_promocion\n")
+        print(f"Generando {NUM_VENTAS} ventas y encuestas de satisfacción...")
+        f.write("\n-- Transacciones (Venta, Detalle, Promoción y Satisfacción)\n")
         tipos_cliente_map = {tc[0]: tc[2] for tc in tipos_cliente}
         
         for id_venta in range(1, NUM_VENTAS + 1):
             cliente_venta, id_metodo_pago = random.choice(clientes_generados), random.choice(metodos_pago)[0]
-            fecha_venta = datetime.now() - timedelta(days=random.randint(1, 730), hours=random.randint(0,23), minutes=random.randint(0,59))
+            fecha_venta = datetime.now() - timedelta(days=random.randint(1, 730))
+            hora_venta = random.randint(10, 19)
+            minuto_venta = random.randint(0, 59)
+            fecha_venta = fecha_venta.replace(hour=hora_venta, minute=minuto_venta, second=0, microsecond=0)
             
-            monto_subtotal = 0
-            detalles_venta = []
+            monto_subtotal = 0; detalles_venta = []
             for _ in range(random.randint(1, 4)):
                 producto = random.choice(productos_generados)
                 cantidad = random.randint(1, 2)
                 monto_subtotal += cantidad * producto['precio']
                 detalles_venta.append({'id_producto': producto['id_producto'], 'cantidad': cantidad, 'precio_unitario': producto['precio']})
             
-            descuento_cliente = tipos_cliente_map.get(cliente_venta['id_tipo_cliente'], 0)
-            monto_descuentos = monto_subtotal * (descuento_cliente / 100)
-            
+            monto_descuentos = monto_subtotal * (tipos_cliente_map.get(cliente_venta['id_tipo_cliente'], 0) / 100)
             promo_aplicada = None
             if random.random() < 0.25:
                 promociones_activas = [p for p in promociones if datetime.strptime(p[3], '%Y-%m-%d').date() <= fecha_venta.date() <= datetime.strptime(p[4], '%Y-%m-%d').date()]
@@ -206,7 +204,13 @@ def generar_sql():
                 f.write(f"INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio_unitario`) VALUES ({id_venta}, {detalle['id_producto']}, {detalle['cantidad']}, {detalle['precio_unitario']:.2f});\n")
             if promo_aplicada:
                 f.write(f"INSERT INTO `venta_promocion` (`id_venta`, `id_promocion`) VALUES ({id_venta}, {promo_aplicada[0]});\n")
-        
+            
+            # --- Satisfacción de venta ---
+            puntuacion = random.randint(1, 10)
+            comentario = random.choice(['', 'Excelente servicio!', 'Rápida entrega', 'Producto defectuoso', 'Muy satisfecho', 'No cumplió expectativas'])
+            fecha_registro = fecha_venta + timedelta(days=random.randint(1, 3), hours=random.randint(1,12))
+            f.write(f"INSERT INTO `satisfaccion_venta` (`id_venta`, `puntuacion`, `comentario`, `fecha_registro`) VALUES ({id_venta}, {puntuacion}, '{comentario}', '{fecha_registro.strftime('%Y-%m-%d %H:%M:%S')}');\n")
+
         f.write("\nCOMMIT;\nSET FOREIGN_KEY_CHECKS=1;\n")
         print("Archivo 'poblar_BD.sql' generado exitosamente.")
 

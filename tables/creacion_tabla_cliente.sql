@@ -5,7 +5,7 @@ CREATE TABLE cliente(
     snombre VARCHAR(25) NOT NULL,
     papellido VARCHAR(35) NOT NULL,
     mapellido VARCHAR(35) NOT NULL,
-    edad INT(3) NOT NULL,
+    fec_nac DATE NOT NULL,
     id_genero INT NOT NULL,
     id_comuna INT NOT NULL,
     id_tipo_cliente INT NOT NULL,
