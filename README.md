@@ -15,6 +15,7 @@ La base de datos está diseñada con enfoque relacional y contiene las siguiente
 - **`marca`**: Marcas de los productos.
 - **`metodo_pago`**: Métodos aceptados para realizar compras.
 - **`promocion`**: Promociones activas con fecha y porcentaje de descuento.
+- **`satisfaccion_venta`**: Maneja las valoraciones de los clientes
 
 ### 🔹 Tablas Principales
 
@@ -53,4 +54,4 @@ Para montar la base de datos en un motor MySQL:
 
 ## 🖼️ Diagrama Entidad-Relacion
 
-![Relational_1](https://github.com/user-attachments/assets/d26ffaf2-80b1-43c9-9cb9-817d866c6583)
+![entidad-relacion](https://github.com/user-attachments/assets/30486d9e-fb05-4ba7-8e24-70143ae15008)
