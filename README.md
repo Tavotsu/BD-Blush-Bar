@@ -33,6 +33,7 @@ Las relaciones entre las tablas se mantienen mediante claves foráneas, garantiz
 - `venta` se relaciona con `cliente` y `metodo_pago`.
 - `detalle_venta` se relaciona con `venta` y `producto`.
 - `venta_promocion` se relaciona con `venta` y `promocion`.
+- `satisfaccion_venta` se relaciona con `venta`.
 
 ## 🚀 Población de Datos
 
