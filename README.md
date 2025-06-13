@@ -51,6 +51,9 @@ Para montar la base de datos en un motor MySQL:
    ```sql
    CREATE DATABASE blush_bar;
    USE blush_bar;
+2. Ejecutar el script de creacion ubicado en el archivo:
+   ```plaintext
+   scripts/montaje_DB_blush-bar.sql
 
 ## 🖼️ Diagrama Entidad-Relacion
 
